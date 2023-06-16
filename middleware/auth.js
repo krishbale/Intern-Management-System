@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const Applicant = require("../models/applicantSchema");
+const Applicant = require("../models/candidateSchema");
 const Company = require("../models/companySchema");
 
 

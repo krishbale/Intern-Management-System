@@ -1,6 +1,7 @@
-const Opportunity = require("../models/opportunitySchema");
+const Opportunity = require("../models/jobSchema");
 const Application = require("../models/applicationSchema");
 const { parse } = require("dotenv");
+//create job by company
 const createjob = async(req,res) =>{
     const {department,Jobtitle,descriptions,skills,deadline,salary} = req.body;
 
@@ -21,6 +22,7 @@ const createjob = async(req,res) =>{
     }
     
 }
+//update specific job by theier id
 const updatejob = async(req,res) =>{    
    const { id } =   req.params;
    const {department,Jobtitle,descriptions,skills,deadline,salary} = req.body;
@@ -45,6 +47,7 @@ try{
 res.status(200).json({message:"job updated successfully"})
    
 }
+//delete specific job by theier id
 const deletejob = async(req,res) =>{
     const { id } =   req.params;
     try{
@@ -52,81 +55,42 @@ const deletejob = async(req,res) =>{
         const deleteapplication = await Application.findOneAndDelete({opportunityid:id})
         
         if(!deletejob && !deleteapplication){
-            return res.status(400).json({message:"eror found"})
+            return res.status(400).json({message:"error found"})
         }
         
     }catch(err){
         console.log(err)
     }
 }
-const getallapplication = async (req,res) =>{
-    try{
-        const user = await req.rootUser;
-        const  application = await Application.find
-        ({companyid:user._id})
-        res.status(200).json({application})
-    }catch(e){
-        console.log(e)
-    }
-}
-const getapplication = async (req,res) =>{
+
+
+//total job created by company
+const viewjob = async(req,res) =>{
     const user = await req.rootUser;
-        const {companyid} = user._id;
+    // const { id } =   req.params;
+    try{
+        const jobs = await Opportunity.find({companyid:user._id})
+        res.status(200).json({jobs})
+    }catch(err){
+        console.log(err)
+    }
 
-    const { Qualification, status, submissionDate } = req.query;
-  
-    const filter = { companyid };
-    if (Qualification) {
-        filter.Qualification = { $regex: Qualification, $options: 'i' };
-      }
-  
-      if (status) {
-        filter.status = status;
-      }
-  
-     
-      const applications = await Application.find(filter);
-        res.json(applications);
-
-    
-
-
-
-      
-
-
-
-    // let page = parseInt(req.query.page) -1|| 0;
-
-    // let limit = Number(req.query.limit) || 5;
-
-
-    // let status = req.query.status || "pending"
-
-
-
-    // let skip = parseInt(req.query.skip) || 1
-    //         const  application = await Application.find
-    //     ({companyid:user._id}).skip(skip).limit(limit);
-
-    //     const total = await Application.countDocuments({companyid:user._id})
-
-
-        
-        
-        
-
-        // res.json({
-        //     success: true,
-        //     total,
-        //     limit,
-        //     status,limit,
-        //     application
-        // });
-
-
-    
 }
 
+//specific job details and  and their total applicants till now
+const view1job = async(req,res) =>{
+    const { id} =   req.params;
+    try{
+        const jobs = await Opportunity.find({_id:id})
+        const applications = await Application.find({opportunityid:id});
+        const totalapplication = applications.length;
+        
 
-module.exports = {createjob,updatejob,deletejob,getallapplication,getapplication}
+        res.status(200).json({jobs,"totalapplication":totalapplication,applications})    
+
+    }catch(err){
+        console.log(err)
+    }   
+}
+
+module.exports = {createjob,updatejob,deletejob,viewjob,view1job}

@@ -14,8 +14,8 @@ const dbconnect = require('./DB/dbconnect')
 const PORT = process.env.PORT || 5000
 
 const companyRouter = require('./routes/company')
-const applicantRouter = require('./routes/applicant');
-const Opportunity = require("./models/opportunitySchema");
+const applicantRouter = require('./routes/candidate');
+const Opportunity = require("./models/jobSchema");
 app.get('/', (req, res) => {
     res.send('Hello World!')
   })

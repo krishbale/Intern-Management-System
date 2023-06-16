@@ -1,6 +1,6 @@
 
 const bcrypt = require('bcryptjs');
-const Applicant = require("../models/applicantSchema");
+const Applicant = require("../models/candidateSchema");
 // const mongoose = require('mongoose');
 const register = async(req,res)=>{
 
