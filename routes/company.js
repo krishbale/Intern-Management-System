@@ -9,7 +9,7 @@ router.post('/createjob',authenticate,createjob)
 router.put('/updatejob/:id',authenticate,updatejob);
 router.put('/deletejob/:id',authenticate,deletejob);
 router.get('/getallapplication/',authenticate,getallapplication);
-router.get('/getapplications',authenticate,getapplication)
+// router.get('/getapplications',authenticate,getapplication)
 
 router.get('/logout',authenticate,logout)
 
