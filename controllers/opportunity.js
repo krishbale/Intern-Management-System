@@ -1,5 +1,6 @@
 const Opportunity = require("../models/opportunitySchema");
 const Application = require("../models/applicationSchema");
+const { parse } = require("dotenv");
 const createjob = async(req,res) =>{
     const {department,Jobtitle,descriptions,skills,deadline,salary} = req.body;
 
@@ -59,20 +60,61 @@ const deletejob = async(req,res) =>{
     }
 }
 const getallapplication = async (req,res) =>{
-    const user = await req.rootUser;
-
-
-
-
-
     try{
-        const application = await Application.find({companyid:user._id})
-        res.send(application);
-
-
+        const user = await req.rootUser;
+        const  application = await Application.find
+        ({companyid:user._id})
+        res.status(200).json({application})
     }catch(e){
         console.log(e)
     }
 }
+const getapplication = async (req,res) =>{
+    try{
+
+    }catch(e){
+        console.log(e)
+    }
+
+
+
+    const user = await req.rootUser;
+
+      
+
+
+
+    let page = parseInt(req.query.page) -1|| 0;
+
+    let limit = Number(req.query.limit) || 5;
+
+
+    let status = req.query.status || "pending"
+
+
+
+    let skip = parseInt(req.query.skip) || 1
+            const  application = await Application.find
+        ({companyid:user._id}).skip(skip).limit(limit);
+
+        const total = await Application.countDocuments({companyid:user._id})
+
+
+        
+        
+        
+
+        res.json({
+            success: true,
+            total,
+            limit,
+            status,limit,
+            application
+        });
+
+
+    
+}
+
 
 module.exports = {createjob,updatejob,deletejob,getallapplication}
