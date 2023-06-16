@@ -70,51 +70,63 @@ const getallapplication = async (req,res) =>{
     }
 }
 const getapplication = async (req,res) =>{
-    try{
-
-    }catch(e){
-        console.log(e)
-    }
-
-
-
     const user = await req.rootUser;
+        const {companyid} = user._id;
+
+    const { Qualification, status, submissionDate } = req.query;
+  
+    const filter = { companyid };
+    if (Qualification) {
+        filter.Qualification = { $regex: Qualification, $options: 'i' };
+      }
+  
+      if (status) {
+        filter.status = status;
+      }
+  
+     
+      const applications = await Application.find(filter);
+        res.json(applications);
+
+    
+
+
 
       
 
 
 
-    let page = parseInt(req.query.page) -1|| 0;
+    // let page = parseInt(req.query.page) -1|| 0;
 
-    let limit = Number(req.query.limit) || 5;
-
-
-    let status = req.query.status || "pending"
+    // let limit = Number(req.query.limit) || 5;
 
 
+    // let status = req.query.status || "pending"
 
-    let skip = parseInt(req.query.skip) || 1
-            const  application = await Application.find
-        ({companyid:user._id}).skip(skip).limit(limit);
 
-        const total = await Application.countDocuments({companyid:user._id})
+
+    // let skip = parseInt(req.query.skip) || 1
+    //         const  application = await Application.find
+    //     ({companyid:user._id}).skip(skip).limit(limit);
+
+    //     const total = await Application.countDocuments({companyid:user._id})
 
 
         
         
         
 
-        res.json({
-            success: true,
-            total,
-            limit,
-            status,limit,
-            application
-        });
+        // res.json({
+        //     success: true,
+        //     total,
+        //     limit,
+        //     status,limit,
+        //     application
+        // });
 
 
     
 }
 
 
-module.exports = {createjob,updatejob,deletejob,getallapplication}
+module.exports = {createjob,updatejob,deletejob,getallapplication,getapplication}
