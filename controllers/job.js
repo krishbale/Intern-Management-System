@@ -67,30 +67,50 @@ const deletejob = async(req,res) =>{
 //total job created by company
 const viewjob = async(req,res) =>{
     const user = await req.rootUser;
-    // const { id } =   req.params;
-    try{
-        const jobs = await Opportunity.find({companyid:user._id})
-        res.status(200).json({jobs})
-    }catch(err){
-        console.log(err)
+    try {
+      const { page, limit } = req.query;
+  
+      const options = {};
+  
+      if (page && limit) {
+        const startIndex = (parseInt(page) - 1) * parseInt(limit);
+        const endIndex = parseInt(page) * parseInt(limit);
+        options.skip = startIndex;
+        options.limit = parseInt(limit);
+      }
+  
+      const jobs = await Opportunity.find({ companyid: user._id }, null, options);
+      res.status(200).json({ jobs });
+    } catch (err) {
+      console.log(err);
     }
 
 }
 
 //specific job details and  and their total applicants till now
+// http://localhost:5000/company/viewjob/648c23d8741f362522245b76?page=1&limit=2
 const view1job = async(req,res) =>{
-    const { id} =   req.params;
-    try{
-        const jobs = await Opportunity.find({_id:id})
-        const applications = await Application.find({opportunityid:id});
-        const totalapplication = applications.length;
-        
+  const { id } = req.params;
+  const { page, limit } = req.query;
 
-        res.status(200).json({jobs,"totalapplication":totalapplication,applications})    
+  try {
+    const jobs = await Opportunity.find({ _id: id });
 
-    }catch(err){
-        console.log(err)
-    }   
+    let options = {};
+
+    if (page && limit) {
+      const startIndex = (parseInt(page) - 1) * parseInt(limit);
+      const endIndex = parseInt(page) * parseInt(limit);
+      options = { skip: startIndex, limit: parseInt(limit) };
+    }
+
+    const applications = await Application.find({ opportunityid: id }, null, options);
+    const totalapplication = applications.length;
+
+    res.status(200).json({ jobs, totalapplication, applications });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 module.exports = {createjob,updatejob,deletejob,viewjob,view1job}

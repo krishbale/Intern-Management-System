@@ -98,15 +98,15 @@ const getapplication = async (req,res) =>{
 
     
 }
+// http://localhost:5000/company/getapplicationby?page=1&limit=10
 // http://localhost:5000/company/getapplicationby?date=2023-06-16
 // http://localhost:5000/company/getapplicationby?status=pending
-// http://localhost:5000/company/getapplicationby?qualifications=bachlors
-
+// http://localhost:5000/company/getapplicationby?qualifications=bachlors&sort=createdAt
 
 const getallapplicationfilter = async (req, res) => {
     try {
       const user = await req.rootUser;
-      const { qualifications, status, date } = req.query; // Assuming the filter criteria are passed as query parameters
+      const { qualifications, status, date, page, limit, sort } = req.query; // Assuming the filter criteria are passed as query parameters
       
       let filter = { companyid: user._id };
   
@@ -125,8 +125,19 @@ const getallapplicationfilter = async (req, res) => {
         endOfDay.setUTCHours(23, 59, 59, 999);
         filter.createdAt = { $gte: startOfDay, $lte: endOfDay };
       }
-  
-      const applicationforcompany = await Application.find(filter);
+      const options = {};
+      if (page && limit) {
+        const startIndex = (parseInt(page) - 1) * parseInt(limit);
+        const endIndex = parseInt(page) * parseInt(limit);
+        options.skip = startIndex;
+        options.limit = parseInt(limit);
+       
+        if (sort) {
+            options.sort = sort;
+          }
+        
+        }
+        const applicationforcompany = await Application.find(filter, null, options);
   
       const application = applicationforcompany;
       res.status(200).json({ application });
