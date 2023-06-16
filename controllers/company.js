@@ -1,5 +1,7 @@
 const  Company = require( "../models/companySchema");
 const bcrypt = require('bcryptjs');
+const Opportunity = require("../models/opportunitySchema");
+//register
 const register = async(req,res)=>{
 
 
@@ -79,9 +81,30 @@ const login = async(req,res) =>{
     
 
 }
+
+const createjob = async(req,res) =>{
+    const {department,Jobtitle,descriptions,skills,deadline,salary} = req.body;
+
+    if(!department || !Jobtitle || !descriptions || !skills || !deadline || !salary){   
+
+        return res.status(422).json({error: "please fill the field properly "})
+    }
+    try{
+        const user = await req.rootUser;
+        // console.log(user)
+        if(user){
+            const job = new Opportunity({department,Jobtitle,descriptions,skills,deadline,salary,companyid:user._id})
+            await job.save()
+            res.status(200).json({message:"job created successfully"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+//logout
 const logout = async(req,res) =>{
     console.log("logout server")    
     res.clearCookie('jwtoken',{path:'/'});
     res.status(200).send('user logout');
 }
-module.exports ={register,login,logout}
+module.exports ={register,login,logout,createjob}

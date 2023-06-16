@@ -4,17 +4,18 @@ const cookieParser = require('cookie-parser')
 const express = require('express');
 
 const app = express();
+
+const Application = require('./models/applicationSchema')
 require('dotenv').config();
 app.use(cookieParser())
 
 app.use(express.json())
 const dbconnect = require('./DB/dbconnect')
-const  Company =require( './models/companySchema');
-const Applicant = require('./models/applicantSchema');
 const PORT = process.env.PORT || 5000
 
 const companyRouter = require('./routes/company')
 const applicantRouter = require('./routes/applicant');
+const Opportunity = require("./models/opportunitySchema");
 app.get('/', (req, res) => {
     res.send('Hello World!')
   })
