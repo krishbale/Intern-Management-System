@@ -34,8 +34,20 @@ console.log(req.query)
         console.log(err)
     }
 }
-const updateapplication = async(req,res) =>{
-    
+const deleteapplication = async(req,res) =>{
+
+    const { id } =   req.params;
+    try{
+        const deleteapplication = await Application.findOneAndDelete({_id:id})
+        
+        if(!deleteapplication){
+            return res.status(400).json({message:"eror found"})
+        }
+        
+    }catch(err){
+        console.log(err)
+    }
+
    
 }
-module.exports = {createapplication,updateapplication}
+module.exports = {createapplication,deleteapplication}

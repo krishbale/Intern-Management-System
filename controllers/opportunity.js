@@ -1,5 +1,5 @@
 const Opportunity = require("../models/opportunitySchema");
-
+const Application = require("../models/applicationSchema");
 const createjob = async(req,res) =>{
     const {department,Jobtitle,descriptions,skills,deadline,salary} = req.body;
 
@@ -44,4 +44,35 @@ try{
 res.status(200).json({message:"job updated successfully"})
    
 }
-module.exports = {createjob,updatejob}
+const deletejob = async(req,res) =>{
+    const { id } =   req.params;
+    try{
+        const deletejob = await Opportunity.findOneAndDelete({_id:id})
+        const deleteapplication = await Application.findOneAndDelete({opportunityid:id})
+        
+        if(!deletejob && !deleteapplication){
+            return res.status(400).json({message:"eror found"})
+        }
+        
+    }catch(err){
+        console.log(err)
+    }
+}
+const getallapplication = async (req,res) =>{
+    const user = await req.rootUser;
+
+
+
+
+
+    try{
+        const application = await Application.find({companyid:user._id})
+        res.send(application);
+
+
+    }catch(e){
+        console.log(e)
+    }
+}
+
+module.exports = {createjob,updatejob,deletejob,getallapplication}
