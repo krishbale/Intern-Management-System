@@ -79,4 +79,9 @@ const login = async(req,res) =>{
     
 
 }
-module.exports ={register,login}
+const logout = async(req,res) =>{
+    console.log("logout server")    
+    res.clearCookie('jwtoken',{path:'/'});
+    res.status(200).send('user logout');
+}
+module.exports ={register,login,logout}
