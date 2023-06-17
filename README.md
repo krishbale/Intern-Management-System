@@ -47,4 +47,10 @@ PORT = 5000
 SECRECT_KEY=MYNAMEISBALKRISHNAPOKHARELILIVEI
 
 
+Contact Information
+Name :Balkrishna Pokharel 
+Contact :9867330222
+email:balkrishnapokharel70@gmail.com
+
+
 
